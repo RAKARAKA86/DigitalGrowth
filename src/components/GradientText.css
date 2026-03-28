@@ -1,0 +1,50 @@
+.animated-gradient-text {
+  position: relative;
+  display: inline-flex;
+  max-width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  cursor: default;
+}
+
+.text-content {
+  display: inline-block;
+  position: relative;
+  z-index: 2;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Animated underline that loops */
+.animated-underline-wrap {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-underline-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #49769F 20%,
+    #7BBDE8 50%,
+    #BDD8E9 70%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: underlineSweep 2.2s linear infinite;
+}
+
+@keyframes underlineSweep {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
