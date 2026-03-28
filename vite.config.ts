@@ -8,19 +8,11 @@ import { defineConfig } from "vite";
 
   export default defineConfig({
     base: "/",
-    plugins: [
-      react(),
-      tailwindcss(),
-    ],
+    plugins: [react(), tailwindcss()],
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "src"),
-      },
+      alias: { "@": path.resolve(__dirname, "src") },
       dedupe: ["react", "react-dom"],
     },
-    build: {
-      outDir: "dist",
-      emptyOutDir: true,
-    },
+    build: { outDir: "dist", emptyOutDir: true },
   });
   
