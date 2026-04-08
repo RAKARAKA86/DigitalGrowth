@@ -424,43 +424,40 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* PLUS CARD — sits below Growth with animated arrow to Premium */}
-              <div style={{ position:'relative' }}>
-                <style>{`
-                  @keyframes plusArrowPulse { 0%,100%{opacity:.55;transform:translateX(0)} 50%{opacity:1;transform:translateX(5px)} }
-                  @keyframes plusDashFlow { from{stroke-dashoffset:90} to{stroke-dashoffset:0} }
-                `}</style>
-                {/* Animated curved arrow — hidden on mobile */}
-                {winW >= 720 && (
-                  <div style={{ position:'absolute', right:'-58px', top:'50%', transform:'translateY(-60%)', width:'58px', height:'90px', pointerEvents:'none', zIndex:10, animation:'plusArrowPulse 1.8s ease-in-out infinite' }}>
-                    <svg viewBox="0 0 58 90" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
-                      <defs>
-                        <linearGradient id="ag2" x1="0" y1="90" x2="58" y2="0" gradientUnits="userSpaceOnUse">
-                          <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
-                        </linearGradient>
-                      </defs>
-                      <path d="M10,80 C10,40 48,30 48,8" stroke="url(#ag2)" strokeWidth="2.5" strokeLinecap="round" fill="none"
-                        style={{ strokeDasharray:90, strokeDashoffset:0, animation:'plusDashFlow 2s ease-in-out infinite' }}/>
-                      <polyline points="40,6 48,8 46,17" stroke="url(#ag2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    </svg>
-                  </div>
-                )}
-                <div className="glass-card price-card reveal" style={{ padding:'32px 28px', transitionDelay:'0.15s', border:'1px solid rgba(123,189,232,0.3)', background:'rgba(255,255,255,0.92)' }}>
-                  <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.12),rgba(123,189,232,0.22))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'16px' }}>PLUS</div>
-                  <p style={{ fontSize:'13px', color:'var(--text-secondary)', marginBottom:'18px', fontStyle:'italic', lineHeight:1.5 }}>
-                    {lang==='es' ? 'Complemento de élite para el plan Premium.' : 'Elite add-on for the Premium plan.'}
-                  </p>
-                  <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
-                    {[
-                      { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
-                      { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
-                    ].map((item, i) => (
-                      <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
-                        <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
-                        <span style={{ fontSize:'14px', color:'var(--text-secondary)', lineHeight:1.5 }}>{lang==='es'?item.es:item.en}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* PLUS CARD */}
+              <style>{`
+                @keyframes plusArrowSlide { 0%,100%{transform:translateX(0);opacity:.7} 50%{transform:translateX(6px);opacity:1} }
+                @keyframes plusCardGlow   { 0%,100%{box-shadow:0 4px 24px rgba(73,118,159,0.10)} 50%{box-shadow:0 4px 36px rgba(73,118,159,0.22)} }
+              `}</style>
+              <div className="glass-card price-card reveal" style={{ padding:'32px 28px', transitionDelay:'0.15s', border:'1px solid rgba(123,189,232,0.3)', background:'rgba(255,255,255,0.92)', animation:'plusCardGlow 3s ease-in-out infinite' }}>
+                <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'16px' }}>
+                  <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.12),rgba(123,189,232,0.22))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase' }}>PLUS</div>
+                </div>
+                <p style={{ fontSize:'13px', color:'var(--text-secondary)', marginBottom:'18px', fontStyle:'italic', lineHeight:1.5 }}>
+                  {lang==='es' ? 'Complemento de élite para el plan Premium.' : 'Elite add-on for the Premium plan.'}
+                </p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'14px', marginBottom:'20px' }}>
+                  {[
+                    { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
+                    { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
+                      <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
+                      <span style={{ fontSize:'14px', color:'var(--text-secondary)', lineHeight:1.5 }}>{lang==='es'?item.es:item.en}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Animated arrow → Premium */}
+                <div style={{ display:'flex', alignItems:'center', gap:'10px', background:'linear-gradient(135deg,rgba(73,118,159,0.07),rgba(123,189,232,0.13))', borderRadius:'12px', padding:'10px 16px', border:'1px solid rgba(123,189,232,0.25)' }}>
+                  <svg width="36" height="22" viewBox="0 0 36 22" fill="none" style={{ flexShrink:0 }}>
+                    <defs><linearGradient id="arrG" x1="0" y1="11" x2="36" y2="11" gradientUnits="userSpaceOnUse"><stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/></linearGradient></defs>
+                    <path d="M2,11 Q12,3 24,11" stroke="url(#arrG)" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                    <polyline points="20,6 26,11 20,16" stroke="url(#arrG)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"
+                      style={{ animation:'plusArrowSlide 1.4s ease-in-out infinite' }}/>
+                  </svg>
+                  <span style={{ fontSize:'12px', fontWeight:700, color:'#49769F', letterSpacing:'0.3px' }}>
+                    {lang==='es' ? 'Incluido en el plan PREMIUM' : 'Included in PREMIUM plan'}
+                  </span>
                 </div>
               </div>
 
