@@ -459,6 +459,7 @@ export default function LandingPage() {
                   {[
                     { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
                     { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
+                    { en:'Advanced Custom CRM: a sales dashboard designed for your sector. Visual pipelines to know exactly how much money is at stake and all your information in one place. It doesn\'t just inform — it Predicts.', es:'CRM personalizado avanzado: un panel de ventas diseñado para tu sector. Pipelines visuales para saber exactamente cuánto dinero hay en juego y toda tu información en un solo lugar. No solo informa — Predice.' },
                   ].map((item, i) => (
                     <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
                       <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
