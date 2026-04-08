@@ -1,17 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage } from './LanguageContext';
 
-const RAIN_CODES    = [176,263,266,281,284,293,296,299,302,305,308,353,356,359];
-const SNOW_CODES    = [179,182,185,227,230,323,326,329,332,335,338,350,368,371,374,377];
-const THUNDER_CODES = [200,386,389];
-const STORM_CODES   = [392,395,362,365];
-
-function getWeatherImage(code: number): string {
-  if (STORM_CODES.includes(code))   return '/images/weather-storm.png';
-  if (THUNDER_CODES.includes(code)) return '/images/weather-thunder.png';
-  if (SNOW_CODES.includes(code))    return '/images/weather-snow.png';
-  if (RAIN_CODES.includes(code))    return '/images/weather-rain.png';
+// WMO weather code helpers (Open-Meteo)
+function getWeatherImageWMO(code: number): string {
+  if ([95,96,99].includes(code))                       return '/images/weather-storm.png';
+  if (code === 95)                                     return '/images/weather-thunder.png';
+  if ([71,73,75,77,85,86].includes(code))              return '/images/weather-snow.png';
+  if ([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)) return '/images/weather-rain.png';
   return '/images/weather-sunny.png';
+}
+
+function getWeatherDescWMO(code: number): string {
+  const map: Record<number,string> = {
+    0:'Cielo despejado', 1:'Mayormente despejado', 2:'Parcialmente nublado', 3:'Nublado',
+    45:'Niebla', 48:'Niebla con escarcha',
+    51:'Llovizna ligera', 53:'Llovizna', 55:'Llovizna intensa',
+    56:'Llovizna helada', 57:'Llovizna helada fuerte',
+    61:'Lluvia ligera', 63:'Lluvia', 65:'Lluvia intensa',
+    66:'Lluvia helada', 67:'Lluvia helada fuerte',
+    71:'Nevada ligera', 73:'Nevada', 75:'Nevada intensa', 77:'Granizo',
+    80:'Chubascos', 81:'Chubascos fuertes', 82:'Chubascos violentos',
+    85:'Nevadas', 86:'Nevadas fuertes',
+    95:'Tormenta', 96:'Tormenta con granizo', 99:'Tormenta severa',
+  };
+  return map[code] ?? 'Cielo despejado';
 }
 
 interface WeatherData {
@@ -30,34 +42,35 @@ const WeatherWidget: React.FC = () => {
     try {
       let lat: number | null = null;
       let lon: number | null = null;
-      // 1. Try GPS first
+      // 1. Try GPS
       if (navigator.geolocation) {
         await new Promise<void>((resolve) => {
           navigator.geolocation.getCurrentPosition(
             (pos) => { lat = pos.coords.latitude; lon = pos.coords.longitude; resolve(); },
             () => resolve(),
-            { timeout: 4000 }
+            { timeout: 5000 }
           );
         });
       }
-      // 2. Fallback: browser-side IP geolocation (uses real user IP, not server IP)
+      // 2. Fallback: browser-side IP geolocation (real user IP)
       if (lat === null) {
         try {
           const ipData = await fetch('https://ipapi.co/json/').then(r => r.json());
           if (ipData.latitude && ipData.longitude) { lat = ipData.latitude; lon = ipData.longitude; }
         } catch { /* silent */ }
       }
-      const apiUrl = lat !== null ? `/api/weather?q=${lat},${lon}` : '/api/weather';
-      const res  = await fetch(apiUrl);
+      if (lat === null) throw new Error('No location');
+      // 3. Open-Meteo — completely free, no API key, no limits
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=auto`;
+      const res  = await fetch(url);
       const data = await res.json();
       if (!data.current) throw new Error('No data');
-      const desc = Array.isArray(data.current.weather_descriptions)
-        ? data.current.weather_descriptions[0]
-        : data.current.weather_descriptions || '';
+      const code = data.current.weathercode as number;
+      const temp = Math.round(data.current.temperature_2m as number);
       setWeather({
-        temp: data.current.temperature,
-        desc,
-        icon: getWeatherImage(data.current.weather_code),
+        temp,
+        desc: getWeatherDescWMO(code),
+        icon: getWeatherImageWMO(code),
         loading: false,
       });
     } catch {
