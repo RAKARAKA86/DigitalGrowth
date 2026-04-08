@@ -151,6 +151,13 @@ export default function LandingPage() {
   const [winW, setWinW] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
   const [particles, setParticles] = useState<{ id:number;size:number;left:number;dur:number;delay:number;opacity:number }[]>([]);
 
+  /* Arrow refs — measure real DOM positions */
+  const gridRef   = useRef<HTMLDivElement>(null);
+  const leftColRef = useRef<HTMLDivElement>(null);
+  const premiumRef = useRef<HTMLDivElement>(null);
+  type ArrowBox = { gw:number; gh:number; x1:number; y1:number; x2:number; y2:number };
+  const [arrowBox, setArrowBox] = useState<ArrowBox|null>(null);
+
   /* Dynamic font sizes for VaporizeText */
   const heroFontPx = Math.max(34, Math.min(68, Math.floor(winW / 14)));
   const heroLineH = Math.max(82, Math.min(148, Math.round(heroFontPx * 1.80)));
@@ -176,6 +183,31 @@ export default function LandingPage() {
     }));
     setParticles(ps);
   }, []);
+
+  /* Measure real DOM positions for the pricing arrow */
+  useEffect(() => {
+    if (!showLanding || winW < 720) { setArrowBox(null); return; }
+    const measure = () => {
+      const grid = gridRef.current;
+      const leftCol = leftColRef.current;
+      const prem = premiumRef.current;
+      if (!grid || !leftCol || !prem) return;
+      const gr = grid.getBoundingClientRect();
+      const lc = leftCol.getBoundingClientRect();
+      const pr = prem.getBoundingClientRect();
+      setArrowBox({
+        gw: gr.width,
+        gh: gr.height,
+        x1: lc.right  - gr.left,
+        y1: lc.bottom - gr.top,
+        x2: pr.left   - gr.left + pr.width  * 0.12,
+        y2: pr.bottom - gr.top  - pr.height * 0.12,
+      });
+    };
+    const raf = requestAnimationFrame(measure);
+    window.addEventListener('resize', measure);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', measure); };
+  }, [winW, showLanding]);
 
   useEffect(() => {
     if (!showLanding) return;
@@ -382,35 +414,47 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', marginBottom:'48px', position:'relative' }}>
+            <div ref={gridRef} style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', marginBottom:'48px', position:'relative' }}>
 
-              {/* ARROW — starts BELOW Plus card, curves right+up to Premium card bottom area */}
-              {winW >= 720 && (
-                <div style={{ position:'absolute', left:'42%', bottom:'0', width:'300px', height:'140px', pointerEvents:'none', zIndex:20 }}>
-                  <style>{`
-                    @keyframes aDraw { 0%{stroke-dashoffset:340} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
-                    @keyframes aHead { 0%,62%{opacity:0} 82%,100%{opacity:1} }
-                  `}</style>
-                  <svg viewBox="0 0 300 140" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
+              {/* ARROW — dynamically positioned using real DOM measurements */}
+              {winW >= 720 && arrowBox && (() => {
+                const { gw, gh, x1, y1, x2, y2 } = arrowBox;
+                const cp1x = x1 + (x2 - x1) * 0.15;
+                const cp1y = y1;
+                const cp2x = x2 - (x2 - x1) * 0.1;
+                const cp2y = y2 + (y1 - y2) * 0.25;
+                const d = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`;
+                const dx = x2 - cp2x, dy = y2 - cp2y;
+                const len = Math.sqrt(dx*dx + dy*dy);
+                const nx = dx/len, ny = dy/len;
+                const hl = 13;
+                const p1 = `${x2 - nx*hl + (-ny)*6},${y2 - ny*hl + nx*6}`;
+                const p3 = `${x2 - nx*hl - (-ny)*6},${y2 - ny*hl - nx*6}`;
+                return (
+                  <svg key="arr" style={{ position:'absolute', top:0, left:0, overflow:'visible', pointerEvents:'none', zIndex:20 }}
+                    width={gw} height={gh} viewBox={`0 0 ${gw} ${gh}`} fill="none">
                     <defs>
-                      <linearGradient id="aGrad" x1="5" y1="130" x2="288" y2="8" gradientUnits="userSpaceOnUse">
+                      <linearGradient id="aGrad" x1={x1} y1={y1} x2={x2} y2={y2} gradientUnits="userSpaceOnUse">
                         <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
                       </linearGradient>
                     </defs>
-                    <path d="M5,130 C60,130 200,20 285,8"
-                      stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" fill="none"
-                      style={{ strokeDasharray:340, animation:'aDraw 2.6s ease-in-out infinite' }}
+                    <style>{`
+                      @keyframes aDraw { 0%{stroke-dashoffset:600} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
+                      @keyframes aHead { 0%,62%{opacity:0} 82%,100%{opacity:1} }
+                    `}</style>
+                    <path d={d} stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" fill="none"
+                      style={{ strokeDasharray:600, animation:'aDraw 2.6s ease-in-out infinite' }}
                     />
-                    <polyline points="274,2 285,8 277,18"
+                    <polyline points={`${p1} ${x2},${y2} ${p3}`}
                       stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" fill="none"
                       style={{ animation:'aHead 2.6s ease-in-out infinite' }}
                     />
                   </svg>
-                </div>
-              )}
+                );
+              })()}
 
               {/* LEFT COLUMN: Growth + Plus */}
-              <div style={{ display:'flex', flexDirection:'column', gap:'28px' }}>
+              <div ref={leftColRef} style={{ display:'flex', flexDirection:'column', gap:'28px' }}>
 
               {/* GROWTH PLAN */}
               <div className="glass-card price-card reveal" style={{ padding:'40px 36px', transitionDelay:'0s', border:'1px solid rgba(73,118,159,0.2)' }}>
@@ -472,7 +516,7 @@ export default function LandingPage() {
               </div>{/* end LEFT COLUMN */}
 
               {/* PREMIUM PLAN */}
-              <div className="premium-card price-card reveal" style={{ transitionDelay:'0.2s' }}>
+              <div ref={premiumRef} className="premium-card price-card reveal" style={{ transitionDelay:'0.2s' }}>
                 <div className="premium-card-inner" style={{ padding:'40px 36px' }}>
                   <div style={{ display:'inline-flex', background:'linear-gradient(135deg,#f0b429,#ffd166)', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#0d1b2a', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'20px' }}>PREMIUM — ELITE</div>
                   <h3 style={{ fontSize:'20px', fontWeight:900, marginBottom:'8px', lineHeight:1.3 }}>
