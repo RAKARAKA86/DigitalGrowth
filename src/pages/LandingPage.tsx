@@ -386,22 +386,22 @@ export default function LandingPage() {
 
               {/* ARROW — starts BELOW Plus card, curves right+up to Premium card bottom area */}
               {winW >= 720 && (
-                <div style={{ position:'absolute', left:'46%', bottom:'0', width:'200px', height:'130px', pointerEvents:'none', zIndex:20 }}>
+                <div style={{ position:'absolute', left:'42%', bottom:'0', width:'300px', height:'140px', pointerEvents:'none', zIndex:20 }}>
                   <style>{`
-                    @keyframes aDraw { 0%{stroke-dashoffset:240} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
+                    @keyframes aDraw { 0%{stroke-dashoffset:340} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
                     @keyframes aHead { 0%,62%{opacity:0} 82%,100%{opacity:1} }
                   `}</style>
-                  <svg viewBox="0 0 200 130" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
+                  <svg viewBox="0 0 300 140" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
                     <defs>
-                      <linearGradient id="aGrad" x1="5" y1="120" x2="190" y2="10" gradientUnits="userSpaceOnUse">
+                      <linearGradient id="aGrad" x1="5" y1="130" x2="288" y2="8" gradientUnits="userSpaceOnUse">
                         <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
                       </linearGradient>
                     </defs>
-                    <path d="M5,120 C50,120 150,30 185,10"
+                    <path d="M5,130 C60,130 200,20 285,8"
                       stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" fill="none"
-                      style={{ strokeDasharray:240, animation:'aDraw 2.6s ease-in-out infinite' }}
+                      style={{ strokeDasharray:340, animation:'aDraw 2.6s ease-in-out infinite' }}
                     />
-                    <polyline points="175,4 185,10 178,20"
+                    <polyline points="274,2 285,8 277,18"
                       stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" fill="none"
                       style={{ animation:'aHead 2.6s ease-in-out infinite' }}
                     />
