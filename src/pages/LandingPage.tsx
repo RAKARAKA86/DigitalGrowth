@@ -382,7 +382,33 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', perspective:'1200px', marginBottom:'48px' }}>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', marginBottom:'48px', position:'relative' }}>
+
+              {/* ARROW — child of grid, absolute in the open space below Plus card */}
+              {winW >= 720 && (
+                <div style={{ position:'absolute', left:'41%', bottom:'10%', width:'220px', height:'110px', pointerEvents:'none', zIndex:20 }}>
+                  <style>{`
+                    @keyframes aDraw { 0%{stroke-dashoffset:230} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
+                    @keyframes aHead { 0%,60%{opacity:0} 80%,100%{opacity:1} }
+                    @keyframes aPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+                  `}</style>
+                  <svg viewBox="0 0 220 110" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
+                    <defs>
+                      <linearGradient id="aGrad" x1="10" y1="100" x2="210" y2="10" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M10,100 C60,100 160,30 200,12"
+                      stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" fill="none"
+                      style={{ strokeDasharray:230, animation:'aDraw 2.6s ease-in-out infinite, aPulse 2.6s ease-in-out infinite' }}
+                    />
+                    <polyline points="190,6 200,12 193,22"
+                      stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" fill="none"
+                      style={{ animation:'aHead 2.6s ease-in-out infinite' }}
+                    />
+                  </svg>
+                </div>
+              )}
 
               {/* LEFT COLUMN: Growth + Plus */}
               <div style={{ display:'flex', flexDirection:'column', gap:'28px' }}>
@@ -425,53 +451,21 @@ export default function LandingPage() {
               </div>
 
               {/* PLUS CARD */}
-              <style>{`
-                @keyframes plusArrowDraw { 0%{stroke-dashoffset:140} 60%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
-                @keyframes plusArrowFade { 0%,60%{opacity:0} 80%{opacity:1} 100%{opacity:1} }
-                @keyframes plusCardGlow  { 0%,100%{box-shadow:0 4px 24px rgba(73,118,159,0.10)} 50%{box-shadow:0 6px 36px rgba(73,118,159,0.24)} }
-              `}</style>
-              <div style={{ position:'relative' }}>
-                {/* Curved arrow going up-right toward Premium card — only on desktop */}
-                {winW >= 720 && (
-                  <div style={{ position:'absolute', right:'-68px', top:'10px', width:'72px', height:'110px', pointerEvents:'none', zIndex:20 }}>
-                    <svg viewBox="0 0 72 110" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
-                      <defs>
-                        <linearGradient id="arrowCurve" x1="60" y1="100" x2="68" y2="4" gradientUnits="userSpaceOnUse">
-                          <stop stopColor="#49769F"/>
-                          <stop offset="1" stopColor="#7BBDE8"/>
-                        </linearGradient>
-                      </defs>
-                      {/* Curved path: starts bottom-left, curves up to top-right */}
-                      <path
-                        d="M18,100 C18,60 62,50 62,10"
-                        stroke="url(#arrowCurve)" strokeWidth="2.5" strokeLinecap="round" fill="none"
-                        style={{ strokeDasharray:140, animation:'plusArrowDraw 2.4s ease-in-out infinite' }}
-                      />
-                      {/* Arrowhead pointing up-right */}
-                      <polyline
-                        points="54,8 62,10 60,19"
-                        stroke="url(#arrowCurve)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"
-                        style={{ animation:'plusArrowFade 2.4s ease-in-out infinite' }}
-                      />
-                    </svg>
-                  </div>
-                )}
-                <div className="glass-card price-card reveal" style={{ padding:'32px 28px', transitionDelay:'0.15s', border:'1px solid rgba(123,189,232,0.3)', background:'rgba(255,255,255,0.92)', animation:'plusCardGlow 3s ease-in-out infinite' }}>
-                  <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.12),rgba(123,189,232,0.22))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'16px' }}>PLUS</div>
-                  <p style={{ fontSize:'13px', color:'var(--text-secondary)', marginBottom:'18px', fontStyle:'italic', lineHeight:1.5 }}>
-                    {lang==='es' ? 'Complemento de élite para el plan Premium.' : 'Elite add-on for the Premium plan.'}
-                  </p>
-                  <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
-                    {[
-                      { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
-                      { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
-                    ].map((item, i) => (
-                      <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
-                        <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
-                        <span style={{ fontSize:'14px', color:'var(--text-secondary)', lineHeight:1.5 }}>{lang==='es'?item.es:item.en}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="glass-card price-card reveal" style={{ padding:'32px 28px', transitionDelay:'0.15s', border:'1px solid rgba(123,189,232,0.3)', background:'rgba(255,255,255,0.92)' }}>
+                <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.12),rgba(123,189,232,0.22))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'16px' }}>PLUS</div>
+                <p style={{ fontSize:'13px', color:'var(--text-secondary)', marginBottom:'18px', fontStyle:'italic', lineHeight:1.5 }}>
+                  {lang==='es' ? 'Complemento de élite para el plan Premium.' : 'Elite add-on for the Premium plan.'}
+                </p>
+                <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
+                  {[
+                    { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
+                    { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
+                  ].map((item, i) => (
+                    <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
+                      <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
+                      <span style={{ fontSize:'14px', color:'var(--text-secondary)', lineHeight:1.5 }}>{lang==='es'?item.es:item.en}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
 
