@@ -384,25 +384,24 @@ export default function LandingPage() {
 
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', marginBottom:'48px', position:'relative' }}>
 
-              {/* ARROW — child of grid, absolute in the open space below Plus card */}
+              {/* ARROW — starts BELOW Plus card, curves right+up to Premium card bottom area */}
               {winW >= 720 && (
-                <div style={{ position:'absolute', left:'41%', bottom:'10%', width:'220px', height:'110px', pointerEvents:'none', zIndex:20 }}>
+                <div style={{ position:'absolute', left:'46%', bottom:'0', width:'200px', height:'130px', pointerEvents:'none', zIndex:20 }}>
                   <style>{`
-                    @keyframes aDraw { 0%{stroke-dashoffset:230} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
-                    @keyframes aHead { 0%,60%{opacity:0} 80%,100%{opacity:1} }
-                    @keyframes aPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+                    @keyframes aDraw { 0%{stroke-dashoffset:240} 65%{stroke-dashoffset:0} 100%{stroke-dashoffset:0} }
+                    @keyframes aHead { 0%,62%{opacity:0} 82%,100%{opacity:1} }
                   `}</style>
-                  <svg viewBox="0 0 220 110" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
+                  <svg viewBox="0 0 200 130" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
                     <defs>
-                      <linearGradient id="aGrad" x1="10" y1="100" x2="210" y2="10" gradientUnits="userSpaceOnUse">
+                      <linearGradient id="aGrad" x1="5" y1="120" x2="190" y2="10" gradientUnits="userSpaceOnUse">
                         <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
                       </linearGradient>
                     </defs>
-                    <path d="M10,100 C60,100 160,30 200,12"
+                    <path d="M5,120 C50,120 150,30 185,10"
                       stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" fill="none"
-                      style={{ strokeDasharray:230, animation:'aDraw 2.6s ease-in-out infinite, aPulse 2.6s ease-in-out infinite' }}
+                      style={{ strokeDasharray:240, animation:'aDraw 2.6s ease-in-out infinite' }}
                     />
-                    <polyline points="190,6 200,12 193,22"
+                    <polyline points="175,4 185,10 178,20"
                       stroke="url(#aGrad)" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" fill="none"
                       style={{ animation:'aHead 2.6s ease-in-out infinite' }}
                     />
