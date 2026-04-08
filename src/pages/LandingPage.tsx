@@ -384,6 +384,9 @@ export default function LandingPage() {
 
             <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(340px,1fr))', gap:'28px', alignItems:'start', perspective:'1200px', marginBottom:'48px' }}>
 
+              {/* LEFT COLUMN: Growth + Plus */}
+              <div style={{ display:'flex', flexDirection:'column', gap:'28px' }}>
+
               {/* GROWTH PLAN */}
               <div className="glass-card price-card reveal" style={{ padding:'40px 36px', transitionDelay:'0s', border:'1px solid rgba(73,118,159,0.2)' }}>
                 <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.1),rgba(123,189,232,0.15))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'20px' }}>GROWTH</div>
@@ -421,6 +424,48 @@ export default function LandingPage() {
                 </div>
               </div>
 
+              {/* PLUS CARD — sits below Growth with animated arrow to Premium */}
+              <div style={{ position:'relative' }}>
+                <style>{`
+                  @keyframes plusArrowPulse { 0%,100%{opacity:.55;transform:translateX(0)} 50%{opacity:1;transform:translateX(5px)} }
+                  @keyframes plusDashFlow { from{stroke-dashoffset:90} to{stroke-dashoffset:0} }
+                `}</style>
+                {/* Animated curved arrow — hidden on mobile */}
+                {winW >= 720 && (
+                  <div style={{ position:'absolute', right:'-58px', top:'50%', transform:'translateY(-60%)', width:'58px', height:'90px', pointerEvents:'none', zIndex:10, animation:'plusArrowPulse 1.8s ease-in-out infinite' }}>
+                    <svg viewBox="0 0 58 90" fill="none" style={{ width:'100%', height:'100%', overflow:'visible' }}>
+                      <defs>
+                        <linearGradient id="ag2" x1="0" y1="90" x2="58" y2="0" gradientUnits="userSpaceOnUse">
+                          <stop stopColor="#49769F"/><stop offset="1" stopColor="#7BBDE8"/>
+                        </linearGradient>
+                      </defs>
+                      <path d="M10,80 C10,40 48,30 48,8" stroke="url(#ag2)" strokeWidth="2.5" strokeLinecap="round" fill="none"
+                        style={{ strokeDasharray:90, strokeDashoffset:0, animation:'plusDashFlow 2s ease-in-out infinite' }}/>
+                      <polyline points="40,6 48,8 46,17" stroke="url(#ag2)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+                    </svg>
+                  </div>
+                )}
+                <div className="glass-card price-card reveal" style={{ padding:'32px 28px', transitionDelay:'0.15s', border:'1px solid rgba(123,189,232,0.3)', background:'rgba(255,255,255,0.92)' }}>
+                  <div style={{ display:'inline-flex', background:'linear-gradient(135deg,rgba(73,118,159,0.12),rgba(123,189,232,0.22))', borderRadius:'100px', padding:'6px 18px', fontSize:'12px', fontWeight:800, color:'#49769F', letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:'16px' }}>PLUS</div>
+                  <p style={{ fontSize:'13px', color:'var(--text-secondary)', marginBottom:'18px', fontStyle:'italic', lineHeight:1.5 }}>
+                    {lang==='es' ? 'Complemento de élite para el plan Premium.' : 'Elite add-on for the Premium plan.'}
+                  </p>
+                  <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
+                    {[
+                      { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
+                      { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ display:'flex', gap:'12px', alignItems:'flex-start' }}>
+                        <span style={{ width:'20px', height:'20px', borderRadius:'6px', flexShrink:0, marginTop:'1px', background:'linear-gradient(135deg,#49769F,#7BBDE8)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'11px', color:'white' }}>✓</span>
+                        <span style={{ fontSize:'14px', color:'var(--text-secondary)', lineHeight:1.5 }}>{lang==='es'?item.es:item.en}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              </div>{/* end LEFT COLUMN */}
+
               {/* PREMIUM PLAN */}
               <div className="premium-card price-card reveal" style={{ transitionDelay:'0.2s' }}>
                 <div className="premium-card-inner" style={{ padding:'40px 36px' }}>
@@ -453,10 +498,8 @@ export default function LandingPage() {
                   </p>
                   <div style={{ display:'flex', flexDirection:'column', gap:'14px' }}>
                     {[
-                      { en:'Custom Mobile App — Real-time push notifications every time a hot lead comes in, so you or your sales team acts within seconds.', es:'App Móvil Personalizada — Notificaciones push en tiempo real cada vez que entra un lead caliente, para que tú o tu equipo actúen al segundo.' },
-                      { en:'Advanced Custom CRM — A sales dashboard designed for your sector. Visual pipelines to know exactly how much money is on the table.', es:'CRM Avanzado a Medida — Panel de ventas diseñado para tu sector con embudos visuales para saber exactamente cuánto dinero hay en la mesa.' },
-                      { en:'AI Voice Agent (Optional but lethal) — An AI that calls the lead by phone within 5 minutes of leaving their data, to pre-qualify and schedule them.', es:'Agente de Voz IA (Opcional pero letal) — Una IA que llama al lead a los 5 minutos de haber dejado sus datos para precalificarlo y agendarlo.' },
-                      { en:'ROI Dashboards — Connect your ad campaigns to see exactly how much each client costs you and what your real return on investment is.', es:'Dashboards de ROI — Conectamos tus campañas de anuncios para ver exactamente cuánto te cuesta cada cliente y cuál es tu retorno real.' },
+                      { en:'Panel de Control — A sales dashboard designed for your sector. Visual pipelines to know exactly how much money is on the table.', es:'Panel de Control — Panel de ventas diseñado para tu sector con embudos visuales para saber exactamente cuánto dinero hay en la mesa.' },
+                      { en:'We Connect Your Networks ( Meta )', es:'Conectamos tus Redes ( Meta )' },
                       { en:'VIP Onboarding & Training — 1-on-1 session with your sales team to ensure total platform adoption.', es:'Onboarding VIP y Capacitación — Sesión 1 a 1 con tu equipo de ventas para asegurar la adopción total.' },
                       { en:'Priority WhatsApp Support — Direct access without waiting tickets.', es:'Soporte Prioritario por WhatsApp — Acceso directo sin tickets de espera.' },
                     ].map((item, i) => (
@@ -557,7 +600,8 @@ export default function LandingPage() {
 
         {/* ═══ FOOTER ═════════════════════════════════════════════════ */}
         <footer style={{ borderTop:'1px solid rgba(73,118,159,0.12)', background:'#f8fbff', padding:'48px 24px', textAlign:'center' }}>
-          <img src="https://ik.imagekit.io/es7dz5sp8/Logo%20Digital%20Line%20sin%20fondo%202.png?updatedAt=1768825713301" alt="DigitalLine Logo" style={{ height:'44px', margin:'0 auto 20px', display:'block', opacity:0.85 }} />
+          <img src="https://ik.imagekit.io/es7dz5sp8/Logo%20Digital%20Line%20sin%20fondo%202.png?updatedAt=1768825713301" alt="DigitalLine Logo" style={{ height:'44px', margin:'0 auto 12px', display:'block', opacity:0.85 }} />
+          <a href="https://www.digitalline.es" target="_blank" rel="noopener noreferrer" style={{ display:'block', fontSize:'14px', fontWeight:700, color:'var(--c2)', letterSpacing:'0.5px', marginBottom:'14px', textDecoration:'none', opacity:0.9 }}>www.digitalline.es</a>
           <p style={{ fontSize:'13px', color:'var(--text-secondary)', margin:'0 0 6px', fontWeight:500 }}>
             {lang === 'es' ? '© 2026 DigitalLine. Todos los derechos reservados.' : '© 2026 DigitalLine. All rights reserved.'}
           </p>
