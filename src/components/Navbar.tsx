@@ -28,16 +28,26 @@ const WeatherWidget: React.FC = () => {
 
   const load = async () => {
     try {
-      let apiUrl = '/api/weather';
+      let lat: number | null = null;
+      let lon: number | null = null;
+      // 1. Try GPS first
       if (navigator.geolocation) {
         await new Promise<void>((resolve) => {
           navigator.geolocation.getCurrentPosition(
-            (pos) => { apiUrl = `/api/weather?q=${pos.coords.latitude},${pos.coords.longitude}`; resolve(); },
+            (pos) => { lat = pos.coords.latitude; lon = pos.coords.longitude; resolve(); },
             () => resolve(),
             { timeout: 4000 }
           );
         });
       }
+      // 2. Fallback: browser-side IP geolocation (uses real user IP, not server IP)
+      if (lat === null) {
+        try {
+          const ipData = await fetch('https://ipapi.co/json/').then(r => r.json());
+          if (ipData.latitude && ipData.longitude) { lat = ipData.latitude; lon = ipData.longitude; }
+        } catch { /* silent */ }
+      }
+      const apiUrl = lat !== null ? `/api/weather?q=${lat},${lon}` : '/api/weather';
       const res  = await fetch(apiUrl);
       const data = await res.json();
       if (!data.current) throw new Error('No data');
